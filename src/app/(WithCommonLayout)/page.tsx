@@ -1,9 +1,10 @@
+import { Button } from "@/components/ui/button";
 
 
 const page = () => {
     return (
         <div>
-            test
+            <Button>Click me</Button>
         </div>
     );
 };
