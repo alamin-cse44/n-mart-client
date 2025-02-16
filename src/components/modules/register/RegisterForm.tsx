@@ -13,6 +13,9 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { registrationSchema } from "./registerValidation";
+import { toast } from "sonner";
+import { registerUser } from "@/services/AuthService";
+import Link from "next/link";
 
 const RegisterForm = () => {
   const form = useForm({
@@ -25,13 +28,18 @@ const RegisterForm = () => {
 
   const password = form.watch("password");
   const passwordConfirm = form.watch("passwordConfirm");
-//   console.log(password, passwordConfirm);
+  //   console.log(password, passwordConfirm);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-        console.log(data)
+      const res = await registerUser(data);
+      if (res.success) {
+        toast.success(res?.message);
+      } else {
+        toast.error(res?.message);
+      }
     } catch (error) {
-        
+      toast.error("Something went wrong!");
     }
   };
 
@@ -118,6 +126,12 @@ const RegisterForm = () => {
           </Button>
         </form>
       </Form>
+      <p className="text-sm text-gray-600 text-center my-3">
+        Already have an account ?
+        <Link href="/login" className="text-primary">
+          Login
+        </Link>
+      </p>
     </div>
   );
 };
