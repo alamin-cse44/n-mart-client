@@ -1,12 +1,16 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/context/UserContext";
 
-
-const page = () => {
-    return (
-        <div>
-            <Button>Click me</Button>
-        </div>
-    );
+const HomePage =  () => {
+  const user = useUser();
+  console.log("user : ", user);
+  return (
+    <div>
+      <Button>Click me</Button>
+    </div>
+  );
 };
 
-export default page;
+export default HomePage;
