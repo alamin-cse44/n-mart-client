@@ -16,22 +16,31 @@ import { toast } from "sonner";
 import { loginUser } from "@/services/AuthService";
 import Link from "next/link";
 import { loginSchema } from "./loginValidation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
   const form = useForm({
     resolver: zodResolver(loginSchema),
   });
 
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirectPath");
+  const router = useRouter();
+
   const {
     formState: { isSubmitting },
   } = form;
-
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await loginUser(data);
       if (res.success) {
         toast.success(res?.message);
+        if (redirectUrl) {
+          router.push(redirectUrl);
+        } else {
+          router.push("/profile");
+        }
       } else {
         toast.error(res?.message);
       }
