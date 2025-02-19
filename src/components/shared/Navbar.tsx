@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import { useUser } from "@/context/UserContext";
 
 const Navbar = () => {
-  const {user, setIsLoading} = useUser();
+  const { user, setIsLoading } = useUser();
   console.log(user);
   const handleLogout = () => {
     logout();
@@ -24,31 +24,43 @@ const Navbar = () => {
   };
   return (
     <div className="flex items-center justify-center gap-2">
+      <Link href={"/"}>
+        <Button>Home</Button>
+      </Link>
       {!user ? (
         <Link href={"/login"}>
           <Button>Login</Button>
         </Link>
       ) : (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>user</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Dashboard</DropdownMenuItem>
-            <DropdownMenuItem>My Shop</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-red-500 cursor-pointer">
-              {" "}
-              <LogOut /> <span>Logout</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <Link href={"/create-shop"}>
+            <Button>Create Shop</Button>
+          </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>user</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              <DropdownMenuItem>My Shop</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-500 cursor-pointer"
+              >
+                {" "}
+                <LogOut /> <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       )}
     </div>
   );
