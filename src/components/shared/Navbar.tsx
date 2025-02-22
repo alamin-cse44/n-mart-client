@@ -14,13 +14,20 @@ import { logout } from "@/services/AuthService";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useUser } from "@/context/UserContext";
+import { usePathname, useRouter } from "next/navigation";
+import { protectedRoutes } from "@/constants";
 
 const Navbar = () => {
   const { user, setIsLoading } = useUser();
-  console.log(user);
+  // console.log(user);
+  const pathname = usePathname();
+  const router = useRouter();
   const handleLogout = () => {
     logout();
     setIsLoading(true);
+    if (protectedRoutes.some((route) => pathname.match(route))) {
+      router.push("/");
+    }
   };
   return (
     <div className="flex items-center justify-center gap-2">
