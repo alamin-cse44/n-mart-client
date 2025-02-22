@@ -55,7 +55,9 @@ const Navbar = () => {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/user/dashboard">Dashboard</Link>{" "}
+              </DropdownMenuItem>
               <DropdownMenuItem>My Shop</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
