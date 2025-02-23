@@ -37,7 +37,7 @@ const CreateCategoryModal = () => {
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(data));
-      formData.append("icon", imageFiles[0] as File);
+      formData.append("icon", imageFiles[0]);
 
       const res = await createCategory(formData);
       console.log(res);
