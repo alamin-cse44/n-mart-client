@@ -1,87 +1,8 @@
-// "use client";
-
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { LogOut } from "lucide-react";
-// import { logout } from "@/services/AuthService";
-// import Link from "next/link";
-// import { Button } from "../ui/button";
-// import { useUser } from "@/context/UserContext";
-// import { usePathname, useRouter } from "next/navigation";
-// import { protectedRoutes } from "@/constants";
-
-// const Navbar = () => {
-//   const { user, setIsLoading } = useUser();
-//   // console.log(user);
-//   const pathname = usePathname();
-//   const router = useRouter();
-//   const handleLogout = () => {
-//     logout();
-//     setIsLoading(true);
-//     if (protectedRoutes.some((route) => pathname.match(route))) {
-//       router.push("/");
-//     }
-//   };
-//   return (
-//     <div className="flex items-center justify-center gap-2">
-//       <Link href={"/"}>
-//         <Button>Home</Button>
-//       </Link>
-//       {!user ? (
-//         <Link href={"/login"}>
-//           <Button>Login</Button>
-//         </Link>
-//       ) : (
-//         <div className="flex items-center gap-2">
-//           <Link href={"/create-shop"}>
-//             <Button>Create Shop</Button>
-//           </Link>
-
-//           <DropdownMenu>
-//             <DropdownMenuTrigger>
-//               <Avatar>
-//                 <AvatarImage src="https://github.com/shadcn.png" />
-//                 <AvatarFallback>user</AvatarFallback>
-//               </Avatar>
-//             </DropdownMenuTrigger>
-//             <DropdownMenuContent>
-//               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-//               <DropdownMenuSeparator />
-//               <DropdownMenuItem>Profile</DropdownMenuItem>
-//               <DropdownMenuItem>
-//                 <Link href="/user/dashboard">Dashboard</Link>{" "}
-//               </DropdownMenuItem>
-//               <DropdownMenuItem>My Shop</DropdownMenuItem>
-//               <DropdownMenuSeparator />
-//               <DropdownMenuItem
-//                 onClick={handleLogout}
-//                 className="text-red-500 cursor-pointer"
-//               >
-//                 {" "}
-//                 <LogOut /> <span>Logout</span>
-//               </DropdownMenuItem>
-//             </DropdownMenuContent>
-//           </DropdownMenu>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Navbar;
-
 "use client";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Bell, ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,19 +10,31 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useUser } from "@/context/UserContext";
+import { usePathname, useRouter } from "next/navigation";
+import { logout } from "@/services/AuthService";
+import { protectedRoutes } from "@/constants";
+import Link from "next/link";
 
 const Navbar = () => {
-  const [active, setActive] = useState("Dashboard");
+  const [active, setActive] = useState("Home");
   const [cartQuantity, setCartQuantity] = useState(3);
-  const [isOpen, setIsOpen] = useState(false); // Drawer state
+  const [isOpen, setIsOpen] = useState(false);
+  const { user, setIsLoading } = useUser();
+  // console.log(user);
+  const pathname = usePathname();
+  const router = useRouter();
+  const handleLogout = () => {
+    logout();
+    setIsLoading(true);
+    if (protectedRoutes.some((route) => pathname.match(route))) {
+      router.push("/");
+    }
+  };
 
   const menuItems = [
-    "Home",
-    "Quickstart",
-    "JavaScript",
-    "TypeScript",
-    "License",
-    "Changelog",
+    { title: "Home", link: "/" },
+    { title: "Dashboard", link: "/user/dashboard" },
   ];
 
   return (
@@ -123,20 +56,21 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6">
-            {menuItems.map((item) => (
-              <button
-                key={item}
-                onClick={() => setActive(item)}
-                className={cn(
-                  "text-gray-600 hover:text-black relative font-medium",
-                  active === item && "text-black"
-                )}
-              >
-                {item}
-                {active === item && (
-                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600"></span>
-                )}
-              </button>
+            {menuItems.map((item, index) => (
+              <Link href={item.link} key={index}>
+                <button
+                  onClick={() => setActive(item.title)}
+                  className={cn(
+                    "text-gray-600 hover:text-black relative font-medium",
+                    active === item.title && "text-black"
+                  )}
+                >
+                  {item.title}
+                  {active === item.title && (
+                    <span className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600"></span>
+                  )}
+                </button>
+              </Link>
             ))}
           </div>
 
@@ -149,34 +83,46 @@ const Navbar = () => {
                 className="w-40 md:w-52"
               />
             </div>
-            <div className="relative">
-              <ShoppingCart className="text-gray-600 cursor-pointer" />
-              {cartQuantity > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5">
-                  {cartQuantity}
-                </span>
-              )}
-            </div>
-            <Bell className="text-gray-600 cursor-pointer" />
-            <Button variant="outline">Login</Button>
-            <Popover>
-              <PopoverTrigger>
-                <Avatar>
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
-                  />
-                </Avatar>
-              </PopoverTrigger>
-              <PopoverContent className="w-48 p-2 bg-white shadow-md rounded-md">
-                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                  Profile
-                </button>
-                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                  Logout
-                </button>
-              </PopoverContent>
-            </Popover>
+
+            {!user ? (
+              <Link href={"/login"}>
+                <Button className="">Login</Button>
+              </Link>
+            ) : (
+              <>
+                <div className="relative">
+                  <ShoppingCart className="text-gray-600 cursor-pointer" />
+                  {cartQuantity > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5">
+                      {cartQuantity}
+                    </span>
+                  )}
+                </div>
+                <Popover>
+                  <PopoverTrigger>
+                    <Avatar>
+                      <AvatarImage
+                        src="https://github.com/shadcn.png"
+                        alt="@shadcn"
+                      />
+                    </Avatar>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-48 p-2 bg-white shadow-md rounded-md">
+                    <Link href={"/user/dashboard"}>
+                      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                        Profile
+                      </button>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </PopoverContent>
+                </Popover>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -208,17 +154,18 @@ const Navbar = () => {
 
         {/* Drawer Menu Items */}
         <div className="flex flex-col space-y-2 p-6">
-          {menuItems.map((item) => (
-            <button
-              key={item}
-              onClick={() => {
-                setActive(item);
-                setIsOpen(false);
-              }}
-              className="text-gray-700 text-lg hover:text-black"
-            >
-              {item}
-            </button>
+          {menuItems.map((item, index) => (
+            <Link href={item.link} key={index}>
+              <button
+                onClick={() => {
+                  setActive(item.title);
+                  setIsOpen(false);
+                }}
+                className="text-gray-700 text-lg hover:text-black"
+              >
+                {item.title}
+              </button>
+            </Link>
           ))}
         </div>
       </div>
