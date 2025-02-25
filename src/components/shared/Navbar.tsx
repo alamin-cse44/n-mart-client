@@ -80,7 +80,7 @@
 "use client";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Bell, ShoppingCart, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -161,7 +161,12 @@ const Navbar = () => {
             <Button variant="outline">Login</Button>
             <Popover>
               <PopoverTrigger>
-                <Avatar className="w-8 h-8 cursor-pointer" />
+                <Avatar>
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                </Avatar>
               </PopoverTrigger>
               <PopoverContent className="w-48 p-2 bg-white shadow-md rounded-md">
                 <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
